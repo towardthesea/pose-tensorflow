@@ -8,7 +8,7 @@ DeeperCut:  A Deeper, Stronger, and Faster Multi-Person Pose Estimation Model
 In _European Conference on Computer Vision (ECCV)_, 2016**
 For more information visit http://pose.mpi-inf.mpg.de
 
-Python 3 is required to run this code.
+Python 2/3 is required to run this code.
 First of all, you should install TensorFlow as described in the
 [official documentation](https://www.tensorflow.org/install/).
 We recommended to use `virtualenv`.
@@ -36,6 +36,9 @@ $ cd -
 
 # Run demo of single person pose estimation
 $ TF_CUDNN_USE_AUTOTUNE=0 python demo/singleperson.py
+
+# Run demo of single person pose estimation for multi-images
+$ TF_CUDNN_USE_AUTOTUNE=0 python demo/singleperson_images.py
 ```
 
 ## Training models

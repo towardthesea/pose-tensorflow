@@ -23,7 +23,7 @@ def check_point(cur_x, cur_y, minx, miny, maxx, maxy):
     return minx < cur_x < maxx and miny < cur_y < maxy
 
 
-def visualize_joints(image, pose):
+def visualize_joints(image, pose, threshold=0.5):
     marker_size = 8
     minx = 2 * marker_size
     miny = 2 * marker_size
@@ -38,12 +38,16 @@ def visualize_joints(image, pose):
     for p_idx in range(num_joints):
         cur_x = pose[p_idx, 0]
         cur_y = pose[p_idx, 1]
-        if check_point(cur_x, cur_y, minx, miny, maxx, maxy):
+        if check_point(cur_x, cur_y, minx, miny, maxx, maxy) and pose[p_idx, 2] >= threshold:
             _npcircle(visim,
                       cur_x, cur_y,
                       marker_size,
                       colors[p_idx],
                       0.0)
+
+    # plt.plot(pose[0:5, 0], pose[0:5, 1], linewidth=2.0, color='r')
+    # plt.plot(pose[6:11, 0], pose[6:11, 1], linewidth=2.0, color='b')
+    # plt.plot(pose[12:13, 0], pose[12:13, 1], linewidth=2.0, color='g')
     return visim
 
 
@@ -52,7 +56,7 @@ def show_heatmaps(cfg, img, scmap, pose, cmap="jet"):
     all_joints = cfg.all_joints
     all_joints_names = cfg.all_joints_names
     subplot_width = 3
-    subplot_height = math.ceil((len(all_joints) + 1) / subplot_width)
+    subplot_height = int(math.ceil((len(all_joints) + 1) / subplot_width))
     f, axarr = plt.subplots(subplot_height, subplot_width)
     for pidx, part in enumerate(all_joints):
         plot_j = (pidx + 1) // subplot_width
@@ -71,7 +75,7 @@ def show_heatmaps(cfg, img, scmap, pose, cmap="jet"):
     curr_plot.axis('off')
     curr_plot.imshow(visualize_joints(img, pose))
 
-    plt.show()
+    # plt.show()
 
 
 def waitforbuttonpress():

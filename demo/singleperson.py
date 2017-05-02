@@ -9,7 +9,7 @@ from config import load_config
 from nnet import predict
 from util import visualize
 from dataset.pose_dataset import data_to_input
-
+import matplotlib.pyplot as plt
 
 cfg = load_config("demo/pose_cfg.yaml")
 
@@ -17,7 +17,7 @@ cfg = load_config("demo/pose_cfg.yaml")
 sess, inputs, outputs = predict.setup_pose_prediction(cfg)
 
 # Read image from file
-file_name = "demo/image.png"
+file_name = "demo/test7.jpg"
 image = imread(file_name, mode='RGB')
 
 image_batch = data_to_input(image)
@@ -31,4 +31,4 @@ pose = predict.argmax_pose_predict(scmap, locref, cfg.stride)
 
 # Visualise
 visualize.show_heatmaps(cfg, image, scmap, pose)
-visualize.waitforbuttonpress()
+plt.show()
