@@ -48,6 +48,49 @@ def draw_links(im, pose, threshold=0.5):
     return im
 
 
+def stream_parts(port, pose, threshold=0.5):
+    num_joints = pose.shape[0]
+    pose_conf = pose[:, 2]
+    pose = pose.astype(int)
+
+    all_body_parts = port.prepare()
+    all_body_parts.clear()
+
+    body_parts = yarp.Bottle()
+    body_parts.clear()
+
+    hands = yarp.Bottle()
+    hands.clear()
+    hands_pos = yarp.Bottle()
+    hands_pos.clear()
+    hands.addString('hands')
+    hands_pos.addInt(pose[6, 0])
+    hands_pos.addInt(pose[6, 1])
+    hands_pos.addInt(pose[11, 0])
+    hands_pos.addInt(pose[11, 1])
+    hands.addList().read(hands_pos)
+    body_parts.addList().read(hands)
+
+    elbows = yarp.Bottle()
+    elbows.clear()
+    elbows_pos = yarp.Bottle()
+    elbows_pos.clear()
+    elbows.addString('elbows')
+    elbows_pos.addInt(pose[7, 0])
+    elbows_pos.addInt(pose[7, 1])
+    elbows_pos.addInt(pose[10, 0])
+    elbows_pos.addInt(pose[10, 1])
+    elbows.addList().read(elbows_pos)
+    body_parts.addList().read(elbows)
+
+    all_body_parts.addList().read(body_parts)
+
+    ts = yarp.Stamp()
+    ts.update()
+    port.setEnvelope(ts)
+    port.write()
+
+
 def im_process(sess, cfg, inputs, outputs, image, fig="preview"):
 
     image_batch = data_to_input(image)
@@ -71,6 +114,7 @@ def im_process(sess, cfg, inputs, outputs, image, fig="preview"):
     # plt.imshow(visualize.visualize_joints(image, pose))
     CONF_THRES = 0.8
 
+    stream_parts(output_port, pose)
     image = draw_links(image, pose)
     image = visualize.visualize_joints(image, pose, threshold=CONF_THRES)
     cv2.imshow(fig, image)
@@ -104,6 +148,9 @@ if __name__ == '__main__':
         print('Cannot connect to camera port!')
         port_connected = False
 
+    output_port = yarp.BufferedPortBottle()
+    output_port.open('/skeleton2D/bodyParts:o')
+
     # Load and setup CNN part detector
     sess, inputs, outputs = predict.setup_pose_prediction(cfg)
 
@@ -121,5 +168,7 @@ if __name__ == '__main__':
             break
 
     input_port.close()
+    output_port.close()
     out.release()
     cv2.destroyAllWindows()
+    yarp.Network.fini()
