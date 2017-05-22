@@ -72,8 +72,9 @@ def im_process(sess, cfg, inputs, outputs, image, fig="preview"):
     CONF_THRES = 0.8
 
     image = draw_links(image, pose)
-    cv2.imshow(fig, visualize.visualize_joints(image, pose, threshold=CONF_THRES))
-
+    image = visualize.visualize_joints(image, pose, threshold=CONF_THRES)
+    cv2.imshow(fig, image)
+    return image
 
 def parse_args():
     """Parse input arguments."""
@@ -107,13 +108,18 @@ if __name__ == '__main__':
     sess, inputs, outputs = predict.setup_pose_prediction(cfg)
 
     cv2.namedWindow(args.des_port)
+    fourcc = cv2.VideoWriter_fourcc(*'x264')  # 'x264' doesn't work
+    out = cv2.VideoWriter('./videos/001_output_pose.avi', fourcc, 30.0, (320, 240))  # 'False' for 1-ch instead of 3-ch for color
 
     while port_connected:
         im_arr, _ = read_yarp_image(inport=input_port)
-        im_process(sess=sess, cfg=cfg, inputs=inputs, outputs=outputs, image=im_arr, fig=args.des_port)
+        im_out = im_process(sess=sess, cfg=cfg, inputs=inputs, outputs=outputs, image=im_arr, fig=args.des_port)
+        out.write(im_out)
+        # cv2.imshow(args.des_port,im_out)
         key = cv2.waitKey(20)
         if key == 27:
             break
 
     input_port.close()
+    out.release()
     cv2.destroyAllWindows()
