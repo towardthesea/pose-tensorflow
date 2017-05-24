@@ -177,13 +177,13 @@ if __name__ == '__main__':
     sess, inputs, outputs = predict.setup_pose_prediction(cfg)
 
     cv2.namedWindow(args.des_port)
-    fourcc = cv2.VideoWriter_fourcc(*'x264')  # 'x264' doesn't work
-    out = cv2.VideoWriter('./videos/001_output_pose.avi', fourcc, 30.0, (320, 240))  # 'False' for 1-ch instead of 3-ch for color
+    #fourcc = cv2.VideoWriter_fourcc(*'x264')  # 'x264' doesn't work
+    #out = cv2.VideoWriter('./videos/001_output_pose.avi', fourcc, 30.0, (320, 240))  # 'False' for 1-ch instead of 3-ch for color
 
     while port_connected:
         im_arr, _ = read_yarp_image(inport=input_port)
         im_out = im_process(sess=sess, cfg=cfg, inputs=inputs, outputs=outputs, image=im_arr, fig=args.des_port)
-        out.write(im_out)
+        #out.write(im_out)
         # cv2.imshow(args.des_port,im_out)
         key = cv2.waitKey(20)
         if key == 27:
@@ -191,6 +191,7 @@ if __name__ == '__main__':
 
     input_port.close()
     output_port.close()
-    out.release()
+    #out.release()
     cv2.destroyAllWindows()
     yarp.Network.fini()
+
