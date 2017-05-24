@@ -83,6 +83,28 @@ def stream_parts(port, pose, threshold=0.5):
     elbows.addList().read(elbows_pos)
     body_parts.addList().read(elbows)
 
+    shoulders = yarp.Bottle()
+    shoulders.clear()
+    shoulders_pos = yarp.Bottle()
+    shoulders_pos.clear()
+    shoulders.addString('shoulders')
+    shoulders_pos.addInt(pose[8, 0])
+    shoulders_pos.addInt(pose[8, 1])
+    shoulders_pos.addInt(pose[9, 0])
+    shoulders_pos.addInt(pose[9, 1])
+    shoulders.addList().read(shoulders_pos)
+    body_parts.addList().read(shoulders)
+
+    head = yarp.Bottle()
+    head.clear()
+    head_pos = yarp.Bottle()
+    head_pos.clear()
+    head.addString('head')
+    head_pos.addInt(int((pose[12, 0]+pose[13, 0])/2.0))
+    head_pos.addInt(int((pose[12, 1]+pose[13, 1])/2.0))
+    head.addList().read(head_pos)
+    body_parts.addList().read(head)
+
     all_body_parts.addList().read(body_parts)
 
     ts = yarp.Stamp()
