@@ -16,6 +16,7 @@ import yarp
 import argparse
 import numpy as np
 
+
 def read_yarp_image(inport):
 
     # Create numpy array to receive the image and the YARP image wrapped around it
@@ -29,6 +30,15 @@ def read_yarp_image(inport):
     #matplotlib.pylab.imshow(img_array)
 
     return img_array, yarp_image
+
+
+def write_yarp_image(outport, img_array):
+    # Create the yarp image and wrap it around the array
+    # img_array = img_array[:, :, (2, 1, 0)]
+    yarp_img = yarp.ImageRgb()
+    yarp_img.resize(320, 240)
+    yarp_img.setExternal(img_array, img_array.shape[1], img_array.shape[0])
+    outport.write(yarp_img)
 
 
 def draw_links(im, pose, threshold=0.5):
@@ -117,7 +127,7 @@ def im_process(sess, cfg, inputs, outputs, image, fig="preview"):
 
     image_batch = data_to_input(image)
 
-    image = image[:, :, (2, 1, 0)]
+    # image = image[:, :, (2, 1, 0)]    // Remove comment to get "good" image in opencv
     timer = Timer()
     timer.tic()
     # Compute prediction with the CNN
@@ -141,6 +151,7 @@ def im_process(sess, cfg, inputs, outputs, image, fig="preview"):
     image = visualize.visualize_joints(image, pose, threshold=CONF_THRES)
     cv2.imshow(fig, image)
     return image
+
 
 def parse_args():
     """Parse input arguments."""
@@ -173,6 +184,9 @@ if __name__ == '__main__':
     output_port = yarp.BufferedPortBottle()
     output_port.open('/skeleton2D/bodyParts:o')
 
+    display_port = yarp.Port()
+    display_port.open('/skeleton2D/dispSkeleton:o')
+
     # Load and setup CNN part detector
     sess, inputs, outputs = predict.setup_pose_prediction(cfg)
 
@@ -184,6 +198,7 @@ if __name__ == '__main__':
         im_arr, _ = read_yarp_image(inport=input_port)
         im_out = im_process(sess=sess, cfg=cfg, inputs=inputs, outputs=outputs, image=im_arr, fig=args.des_port)
         #out.write(im_out)
+        write_yarp_image(display_port, im_out)
         # cv2.imshow(args.des_port,im_out)
         key = cv2.waitKey(20)
         if key == 27:
@@ -191,6 +206,7 @@ if __name__ == '__main__':
 
     input_port.close()
     output_port.close()
+    display_port.close()
     #out.release()
     cv2.destroyAllWindows()
     yarp.Network.fini()
