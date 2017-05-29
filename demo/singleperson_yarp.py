@@ -78,6 +78,8 @@ def stream_parts(port, pose, threshold=0.5):
     hands_pos.addInt(pose[6, 1])
     hands_pos.addInt(pose[11, 0])
     hands_pos.addInt(pose[11, 1])
+    hands_pos.addDouble(pose_conf[6])
+    hands_pos.addDouble(pose_conf[11])
     hands.addList().read(hands_pos)
     body_parts.addList().read(hands)
 
@@ -90,6 +92,8 @@ def stream_parts(port, pose, threshold=0.5):
     elbows_pos.addInt(pose[7, 1])
     elbows_pos.addInt(pose[10, 0])
     elbows_pos.addInt(pose[10, 1])
+    elbows_pos.addDouble(pose_conf[7])
+    elbows_pos.addDouble(pose_conf[10])
     elbows.addList().read(elbows_pos)
     body_parts.addList().read(elbows)
 
@@ -102,6 +106,8 @@ def stream_parts(port, pose, threshold=0.5):
     shoulders_pos.addInt(pose[8, 1])
     shoulders_pos.addInt(pose[9, 0])
     shoulders_pos.addInt(pose[9, 1])
+    shoulders_pos.addDouble(pose_conf[8])
+    shoulders_pos.addDouble(pose_conf[9])
     shoulders.addList().read(shoulders_pos)
     body_parts.addList().read(shoulders)
 
@@ -112,6 +118,7 @@ def stream_parts(port, pose, threshold=0.5):
     head.addString('head')
     head_pos.addInt(int((pose[12, 0]+pose[13, 0])/2.0))
     head_pos.addInt(int((pose[12, 1]+pose[13, 1])/2.0))
+    head_pos.addDouble((pose_conf[12]+pose_conf[13])/2.0)
     head.addList().read(head_pos)
     body_parts.addList().read(head)
 
