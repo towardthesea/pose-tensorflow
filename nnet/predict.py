@@ -1,4 +1,5 @@
 import numpy as np
+import os
 
 import tensorflow as tf
 
@@ -21,7 +22,12 @@ def setup_pose_prediction(cfg):
     sess.run(tf.local_variables_initializer())
 
     # Restore variables from disk.
-    restorer.restore(sess, cfg.init_weights)
+    filename = cfg.init_weights
+    if 'POSE_PARAM_PATH' in os.environ:
+        filename = os.environ['POSE_PARAM_PATH'] + '/' + cfg.init_weights
+
+    print('weight file name', filename)
+    restorer.restore(sess, filename)
 
     return sess, inputs, outputs
 
