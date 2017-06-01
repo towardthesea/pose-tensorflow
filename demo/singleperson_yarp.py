@@ -157,7 +157,8 @@ def im_process(sess, cfg, inputs, outputs, image, fig="preview"):
     stream_parts(output_port, pose)
     image = draw_links(image, pose)
     image = visualize.visualize_joints(image, pose, threshold=CONF_THRES)
-    cv2.imshow(fig, image)
+    if args.cv_show:
+        cv2.imshow(fig, image)
     return image
 
 
@@ -168,6 +169,8 @@ def parse_args():
                         default='/icub/camcalib/left/out')
     parser.add_argument('--des', dest='des_port', help='Yarp port of receiver',
                         default='/leftCam')
+    parser.add_argument('--cv', dest='cv_show', help='Show image on opencv fig',
+                        default=False)
 
     args = parser.parse_args()
 
