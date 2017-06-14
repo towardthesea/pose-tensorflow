@@ -253,8 +253,8 @@ class skeleton2DModule(yarp.RFModule):
                                              outputs=outputs, image=self._input_buf_array,
                                              out_port=self._output_port, fig=args.des_port)
         # Send the result to the output port
-        # write_yarp_image(self._display_port, self._display_buf_image)
-        self._display_port.write(self._display_buf_image)
+        write_yarp_image(self._display_port, self._display_buf_array)
+        # self._display_port.write(self._display_buf_image)
         if args.cv_show:
             key = cv2.waitKey(20)
             if key == 27:
