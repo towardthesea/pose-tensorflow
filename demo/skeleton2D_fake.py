@@ -207,7 +207,7 @@ class skeleton2DModule(yarp.RFModule):
         # Output
         self._display_buf_image = yarp.ImageRgb()
         self._display_buf_image.resize(320, 240)
-        self._display_buf_array = np.zeros((240, 320), dtype=np.float32)
+        self._display_buf_array = np.zeros((240, 320, 3), dtype=np.uint8)
         self._display_buf_image.setExternal(self._display_buf_array,
                                             self._display_buf_array.shape[1], self._display_buf_array.shape[0])
         self._logger = yarp.Log()
@@ -246,13 +246,15 @@ class skeleton2DModule(yarp.RFModule):
     def updateModule(self):
 
         # Read an image from the port
-        self._input_buf_array, _ = read_yarp_image(inport=self._input_port)
+        # self._input_buf_array, _ = read_yarp_image(inport=self._input_port)
+        self._input_port.read(self._input_buf_image)
         # Process the image
-        self._display_buf_image = im_process(sess=sess, cfg=cfg, inputs=inputs,
+        self._display_buf_array = im_process(sess=sess, cfg=cfg, inputs=inputs,
                                              outputs=outputs, image=self._input_buf_array,
                                              out_port=self._output_port, fig=args.des_port)
         # Send the result to the output port
-        write_yarp_image(self._display_port, self._display_buf_image)
+        # write_yarp_image(self._display_port, self._display_buf_image)
+        self._display_port.write(self._display_buf_image)
         if args.cv_show:
             key = cv2.waitKey(20)
             if key == 27:
