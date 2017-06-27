@@ -80,24 +80,24 @@ def stream_parts(port, pose, threshold=0.5):
     part_bottle = yarp.Bottle()
     # for pidx in range(num_joints):
     part_bottle.clear()
-    add_part(part_bottle, pose[13, :], all_joints_names[13])    # forehead
-    add_part(part_bottle, pose[12, :], all_joints_names[12])    # chin
+    add_part(part_bottle, pose[13, :], 'forehead')  # forehead
+    add_part(part_bottle, pose[12, :], 'chin')      # chin
 
-    add_part(part_bottle, pose[8, :], all_joints_names[8])      # R shoulder
-    add_part(part_bottle, pose[7, :], all_joints_names[7])      # R elbow
-    add_part(part_bottle, pose[6, :], all_joints_names[6])      # R wrist
+    add_part(part_bottle, pose[8, :], 'Rshoulder')  # R shoulder
+    add_part(part_bottle, pose[7, :], 'Relbow')     # R elbow
+    add_part(part_bottle, pose[6, :], 'Rwrist')     # R wrist
 
-    add_part(part_bottle, pose[9, :], all_joints_names[9])      # L shoulder
-    add_part(part_bottle, pose[10, :], all_joints_names[10])    # L elbow
-    add_part(part_bottle, pose[11, :], all_joints_names[11])    # L wrist
+    add_part(part_bottle, pose[9, :], 'Lshoulder')  # L shoulder
+    add_part(part_bottle, pose[10, :], 'Lelbow')    # L elbow
+    add_part(part_bottle, pose[11, :], 'Lwrist')    # L wrist
 
-    add_part(part_bottle, pose[2, :], all_joints_names[2])      # R hip
-    add_part(part_bottle, pose[1, :], all_joints_names[1])      # R knee
-    add_part(part_bottle, pose[0, :], all_joints_names[0])      # R ankle
+    add_part(part_bottle, pose[2, :], 'Rhip')       # R hip
+    add_part(part_bottle, pose[1, :], 'Rknee')      # R knee
+    add_part(part_bottle, pose[0, :], 'Rankle')     # R ankle
 
-    add_part(part_bottle, pose[3, :], all_joints_names[3])      # L hip
-    add_part(part_bottle, pose[4, :], all_joints_names[4])      # L knee
-    add_part(part_bottle, pose[5, :], all_joints_names[5])      # L ankle
+    add_part(part_bottle, pose[3, :], 'Lhip')       # L hip
+    add_part(part_bottle, pose[4, :], 'Lknee')      # L knee
+    add_part(part_bottle, pose[5, :], 'Lankle')     # L ankle
 
     body_parts.addList().read(part_bottle)
 
