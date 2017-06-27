@@ -57,10 +57,19 @@ def draw_links(im, pose, threshold=0.5):
     return im
 
 
+def add_part(part_list, part_pose, part_name):
+    part = yarp.Bottle()
+    part.addString(part_name)
+    part.addDouble(part_pose[0])
+    part.addDouble(part_pose[1])
+    part.addDouble(part_pose[2])
+
+    part_list.addList().read(part)
+
+
 def stream_parts(port, pose, threshold=0.5):
-    num_joints = pose.shape[0]
-    pose_conf = pose[:, 2]
-    pose = pose.astype(int)
+
+    all_joints_names = cfg.all_joints_names
 
     all_body_parts = port.prepare()
     all_body_parts.clear()
@@ -68,58 +77,29 @@ def stream_parts(port, pose, threshold=0.5):
     body_parts = yarp.Bottle()
     body_parts.clear()
 
-    hands = yarp.Bottle()
-    hands.clear()
-    hands_pos = yarp.Bottle()
-    hands_pos.clear()
-    hands.addString('hands')
-    hands_pos.addInt(pose[6, 0])
-    hands_pos.addInt(pose[6, 1])
-    hands_pos.addInt(pose[11, 0])
-    hands_pos.addInt(pose[11, 1])
-    hands_pos.addDouble(pose_conf[6])
-    hands_pos.addDouble(pose_conf[11])
-    hands.addList().read(hands_pos)
-    body_parts.addList().read(hands)
+    part_bottle = yarp.Bottle()
+    # for pidx in range(num_joints):
+    part_bottle.clear()
+    add_part(part_bottle, pose[13, :], all_joints_names[13])    # forehead
+    add_part(part_bottle, pose[12, :], all_joints_names[12])    # chin
 
-    elbows = yarp.Bottle()
-    elbows.clear()
-    elbows_pos = yarp.Bottle()
-    elbows_pos.clear()
-    elbows.addString('elbows')
-    elbows_pos.addInt(pose[7, 0])
-    elbows_pos.addInt(pose[7, 1])
-    elbows_pos.addInt(pose[10, 0])
-    elbows_pos.addInt(pose[10, 1])
-    elbows_pos.addDouble(pose_conf[7])
-    elbows_pos.addDouble(pose_conf[10])
-    elbows.addList().read(elbows_pos)
-    body_parts.addList().read(elbows)
+    add_part(part_bottle, pose[8, :], all_joints_names[8])      # R shoulder
+    add_part(part_bottle, pose[7, :], all_joints_names[7])      # R elbow
+    add_part(part_bottle, pose[6, :], all_joints_names[6])      # R wrist
 
-    shoulders = yarp.Bottle()
-    shoulders.clear()
-    shoulders_pos = yarp.Bottle()
-    shoulders_pos.clear()
-    shoulders.addString('shoulders')
-    shoulders_pos.addInt(pose[8, 0])
-    shoulders_pos.addInt(pose[8, 1])
-    shoulders_pos.addInt(pose[9, 0])
-    shoulders_pos.addInt(pose[9, 1])
-    shoulders_pos.addDouble(pose_conf[8])
-    shoulders_pos.addDouble(pose_conf[9])
-    shoulders.addList().read(shoulders_pos)
-    body_parts.addList().read(shoulders)
+    add_part(part_bottle, pose[9, :], all_joints_names[9])      # L shoulder
+    add_part(part_bottle, pose[10, :], all_joints_names[10])    # L elbow
+    add_part(part_bottle, pose[11, :], all_joints_names[11])    # L wrist
 
-    head = yarp.Bottle()
-    head.clear()
-    head_pos = yarp.Bottle()
-    head_pos.clear()
-    head.addString('head')
-    head_pos.addInt(int((pose[12, 0]+pose[13, 0])/2.0))
-    head_pos.addInt(int((pose[12, 1]+pose[13, 1])/2.0))
-    head_pos.addDouble((pose_conf[12]+pose_conf[13])/2.0)
-    head.addList().read(head_pos)
-    body_parts.addList().read(head)
+    add_part(part_bottle, pose[2, :], all_joints_names[2])      # R hip
+    add_part(part_bottle, pose[1, :], all_joints_names[1])      # R knee
+    add_part(part_bottle, pose[0, :], all_joints_names[0])      # R ankle
+
+    add_part(part_bottle, pose[3, :], all_joints_names[3])      # L hip
+    add_part(part_bottle, pose[4, :], all_joints_names[4])      # L knee
+    add_part(part_bottle, pose[5, :], all_joints_names[5])      # L ankle
+
+    body_parts.addList().read(part_bottle)
 
     all_body_parts.addList().read(body_parts)
 
