@@ -80,7 +80,8 @@ def stream_parts(port, pose, threshold=0.5):
     part_bottle = yarp.Bottle()
     # for pidx in range(num_joints):
     part_bottle.clear()
-    add_part(part_bottle, pose[13, :], 'forehead')  # forehead
+    head = ((pose[13,:]+pose[12,:])/2.0)
+    add_part(part_bottle, head       , 'forehead')  # forehead
     add_part(part_bottle, pose[12, :], 'chin')      # chin
 
     add_part(part_bottle, pose[8, :], 'Rshoulder')  # R shoulder
