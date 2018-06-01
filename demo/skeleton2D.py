@@ -148,6 +148,8 @@ def parse_args():
                         default='/icub/camcalib/left/out')
     parser.add_argument('--des', dest='des_port', help='Yarp port of receiver',
                         default='/leftCam')
+    parser.add_argument('--gpu', dest='gpu_usage', help='Maximum permissible gpu usage',
+                        default=0.7, type=float)
     parser.add_argument('--cv', dest='cv_show', help='Show image on opencv fig',
                         default=False)
 
@@ -254,7 +256,7 @@ if __name__ == '__main__':
 
     post2D = skeleton2DModule(args.des_port, '/skeleton2D/bodyParts:o', '/skeleton2D/dispSkeleton:o')
     # Load and setup CNN part detector
-    sess, inputs, outputs = predict.setup_pose_prediction(cfg)
+    sess, inputs, outputs = predict.setup_pose_prediction(cfg, gpu_usage=args.gpu_usage)
 
     rf = yarp.ResourceFinder()
     rf.setVerbose(True)

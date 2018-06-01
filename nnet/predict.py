@@ -5,7 +5,7 @@ import tensorflow as tf
 from nnet.net_factory import pose_net
 
 
-def setup_pose_prediction(cfg):
+def setup_pose_prediction(cfg, gpu_usage=0.7):
     inputs = tf.placeholder(tf.float32, shape=[cfg.batch_size, None, None, 3])
 
     outputs = pose_net(cfg).test(inputs)
@@ -13,7 +13,7 @@ def setup_pose_prediction(cfg):
     restorer = tf.train.Saver()
 
     # Assume that you have 12GB of GPU memory and want to allocate ~4GB:
-    gpu_options = tf.GPUOptions(per_process_gpu_memory_fraction=0.7)
+    gpu_options = tf.GPUOptions(per_process_gpu_memory_fraction=gpu_usage)
     sess = tf.Session(config=tf.ConfigProto(gpu_options=gpu_options))
 
     sess.run(tf.global_variables_initializer())
