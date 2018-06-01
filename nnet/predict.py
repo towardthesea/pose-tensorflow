@@ -12,7 +12,9 @@ def setup_pose_prediction(cfg):
 
     restorer = tf.train.Saver()
 
-    sess = tf.Session()
+    # Assume that you have 12GB of GPU memory and want to allocate ~4GB:
+    gpu_options = tf.GPUOptions(per_process_gpu_memory_fraction=0.7)
+    sess = tf.Session(config=tf.ConfigProto(gpu_options=gpu_options))
 
     sess.run(tf.global_variables_initializer())
     sess.run(tf.local_variables_initializer())
