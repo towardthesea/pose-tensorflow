@@ -134,7 +134,7 @@ def im_process(sess, cfg, inputs, outputs, image, out_port, fig="preview"):
     CONF_THRES = 0.8
 
     stream_parts(out_port, pose)
-    image = draw_links(image, pose)
+    image = draw_links(image, pose, threshold=CONF_THRES)
     image = visualize.visualize_joints(image, pose, threshold=CONF_THRES)
     if args.cv_show:
         cv2.imshow(fig, image)
