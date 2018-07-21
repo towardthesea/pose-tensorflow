@@ -230,7 +230,7 @@ class skeleton2DModule(yarp.RFModule):
 
         # Read an image from the port
         # self._input_buf_array, _ = read_yarp_image(inport=self._input_port)
-        self._input_port.read(self._input_buf_image)
+        self._input_port.read(self._input_buf_image, False)
         # Process the image
         self._display_buf_array = im_process(sess=sess, cfg=cfg, inputs=inputs,
                                              outputs=outputs, image=self._input_buf_array,
