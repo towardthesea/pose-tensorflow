@@ -51,9 +51,11 @@ def draw_links(im, pose, threshold=0.5):
             pt1 = (pose[jnt_idx, 0], pose[jnt_idx, 1])
             pt2 = (pose[jnt_idx+1, 0], pose[jnt_idx+1, 1])
             cv2.line(im, pt1, pt2, color=(0, 0, 255), thickness=3)
-    pt1 = (pose[12, 0], pose[12, 1])
-    pt2 = (pose[13, 0], pose[13, 1])
-    cv2.line(im, pt1, pt2, color=(255, 0, 0), thickness=3)
+
+    if pose_conf[12] >= threshold and pose_conf[13] >= threshold:
+        pt1 = (pose[12, 0], pose[12, 1])
+        pt2 = (pose[13, 0], pose[13, 1])
+        cv2.line(im, pt1, pt2, color=(255, 0, 0), thickness=3)
     return im
 
 
