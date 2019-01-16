@@ -1,3 +1,4 @@
+import os
 import numpy as np
 
 import tensorflow as tf
@@ -20,7 +21,7 @@ def setup_pose_prediction(cfg, gpu_usage=0.7):
     sess.run(tf.local_variables_initializer())
 
     # Restore variables from disk.
-    restorer.restore(sess, cfg.init_weights)
+    restorer.restore(sess, os.path.join(os.getenv('SKELETON2D'), cfg.init_weights))
 
     return sess, inputs, outputs
 
