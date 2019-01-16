@@ -250,7 +250,7 @@ class skeleton2DModule(yarp.RFModule):
 
 
 if __name__ == '__main__':
-    cfg = load_config(os.path.join(os.getenv('SKELETON2D'), "demo/pose_cfg.yaml"))
+    cfg = load_config("demo/pose_cfg.yaml")
     args = parse_args()
 
     # Initialise YARP

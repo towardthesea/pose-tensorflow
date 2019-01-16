@@ -30,15 +30,27 @@ by setting the environment variable, eg. `CUDA_VISIBLE_DEVICES=0`.
 
 ```
 # Download pre-trained model files
-$ cd models/mpii
-$ ./download_models.sh
-$ cd -
+cd models/mpii
+./download_models.sh
+cd -
 
 # Run demo of single person pose estimation
-$ TF_CUDNN_USE_AUTOTUNE=0 python demo/singleperson.py
+TF_CUDNN_USE_AUTOTUNE=0 python demo/singleperson.py
 
 # Run demo of single person pose estimation for multi-images
-$ TF_CUDNN_USE_AUTOTUNE=0 python demo/singleperson_images.py
+TF_CUDNN_USE_AUTOTUNE=0 python demo/singleperson_images.py
+```
+
+## Yarp demo
+- Add the following lines into *bashrc*
+```
+export SKELETON2D=~/<path_to_pose-tensorflow>
+export POSE_PARAM_PATH=$SKELETON2D
+export PATH=$PATH:$SKELETON2D/demo
+```
+- Run the yarp module
+```
+skeleton2D.py --des /skeleton2D --gpu 0.7
 ```
 
 ## Training models
